@@ -1,5 +1,5 @@
 import net from 'net';
-import {hexToBin, decodeAdsbMessage} from 'asbd-decoder';
+import {hexToBin, decodeAdsbMessage} from './asbd-decoder';
 
 const client = new net.Socket();
 const HOST = '172.17.0.1';
