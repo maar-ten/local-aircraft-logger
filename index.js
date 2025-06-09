@@ -1,26 +1,26 @@
 import net from 'net';
+import {hexToBin, decodeAdsbMessage} from 'asbd-decoder';
 
-// Maak verbinding met dump1090 op poort 30001
 const client = new net.Socket();
-const HOST = 'host.docker.internal'; // of gebruik '127.0.0.1' als je geen Docker gebruikt
-const PORT = 30001;
+const HOST = '172.17.0.1';
+const PORT = 30002; // default data port of dump1090
 
 client.connect(PORT, HOST, () => {
   console.log(`✅ Verbonden met dump1090 op ${HOST}:${PORT}`);
 });
 
-// Elke keer als er data binnenkomt van dump1090
 client.on('data', (data) => {
-  console.log(`✈️  Ontvangen: ${data.toString('hex')}`);
-  // Hier kun je evt. verder parsen/analyseren
+  if (hexToBin(data).length !== 112) {
+    return; // ignore messages that are not 112 bits
+  }
+  console.log(`✈️  Ontvangen: ${data}`);
+  console.log(decodeAdsbMessage(data));
 });
 
-// Foutafhandeling
 client.on('error', (err) => {
   console.error(`❌ Fout: ${err.message}`);
 });
 
-// Verbinding gesloten
 client.on('close', () => {
   console.log('🔌 Verbinding gesloten');
 });
