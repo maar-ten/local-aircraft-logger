@@ -52,7 +52,14 @@
                 planeDataLines
                   .map(line => line.split(','))
                   .filter(planData => planeData.length >= 8)
-                  .forEach(data => L.marker([data[4], data[5]]).addTo(map));
+                  .forEach(data => {
+                    const marker = L.marker([data[4], data[5]]).addTo(map);
+                    marker.bindPopup(getPopupText(data));
+                  });
+            }
+
+            function getPopupText(data) {
+                return `hex: ${data[1]}<br>flight: ${data[2]}<br>time: ${data[3]}<br>distance: ${data[6]} km<br>seen #: ${data[7]}`;
             }
         </script>
     </body>
