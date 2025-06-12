@@ -1,7 +1,7 @@
 const fs = require('fs')
 
-const URL = 'http://172.17.0.1:8080/data.json';
-// const URL = 'http://localhost:8080/data.json';
+//const URL = 'http://172.17.0.1:8080/data.json';
+const URL = 'http://localhost:8080/data.json';
 const POLLING_INTERVAL = 5 * 1000; // 5s
 const LAT_HOME = Number(process.env.LAT_HOME) || 52;
 const LON_HOME = Number(process.env.LON_HOME) || 4;
@@ -24,8 +24,9 @@ function logPlanesNearby() {
 
   // write data to log of planes that have left the local area
   const now = Date.now(); // millis since epoch
-  const expirationTime = 2 * 60 * 1000; // 2 minutes
+  const expirationTime = .5 * 60 * 1000; // 2 minutes
   const expiredPlanes = planes.values()
+    .toArray()
     .filter(plane => now - plane.lastSeen >= expirationTime);
 
   logPlanes(expiredPlanes);
@@ -49,10 +50,10 @@ function updatePlanes(plane) {
   const now = Date.now();
 
   if (cachedPlane && cachedPlane.closestDistance < currentDistance) {
-    // just update the last seen time
+    // plane is further away so just update the last seen time
     planes.set(plane.hex, {
-      ...plane,
-      measurements: cachedPlane.measurements++,
+      ...cachedPlane,
+      measurements: ++cachedPlane.measurements,
       lastSeen: now
     });
     return;
@@ -83,13 +84,9 @@ function toString(plane) {
     plane.closestDistance.toFixed(1),
     plane.measurements
   ].toString();
-  
 }
 
 function getDistance({lat, lon}) {
-  const toRad = (angle) => (angle * Math.PI) / 180;
-  
-  const R = 6371; // Radius of the Earth in km
   const dLat = toRad(LAT_HOME - lat);
   const dLon = toRad(LON_HOME - lon);
   
@@ -99,6 +96,10 @@ function getDistance({lat, lon}) {
   
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c; // Distance in km
+}
+
+function toRad(angle) {
+  return (angle * Math.PI) / 180;
 }
 
 setInterval(logPlanesNearby, POLLING_INTERVAL);
