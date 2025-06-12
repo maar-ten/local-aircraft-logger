@@ -81,6 +81,9 @@ function toString(plane) {
     timestamp(plane.lastSeen),
     plane.hex,
     plane.flight.trim(),
+    timestamp(plane.closestDistanceTime),
+    plane.closestDistanceLat,
+    plane.closestDistanceLon,
     plane.closestDistance.toFixed(1),
     plane.measurements
   ].toString();
