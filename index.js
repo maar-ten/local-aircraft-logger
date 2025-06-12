@@ -9,7 +9,6 @@ const R = 6371; // Radius of the earth in km
 
 console.log('Lat/lon of home are set to:', [LAT_HOME, LON_HOME]);
 console.log(`Fetching data from: ${URL} every ${POLLING_INTERVAL / 1000} sec.`);
-console.log(Math.atan2);
 
 const planes = new Map();
 
@@ -33,8 +32,6 @@ function logPlanesNearby() {
 
   // clean up of expired planes
   expiredPlanes.forEach(plane => planes.delete(plane.hex));
-
-  console.log(planes.values().toArray());
 }
 
 async function processResponse(response) {
@@ -68,17 +65,28 @@ function updatePlanes(plane) {
     closestDistanceTime: now,
     closestDistanceLat: plane.lat,
     closestDistanceLon: plane.lon,
-    measurements: cachedPlane ? cachedPlane.measurements++ : 1,
+    measurements: cachedPlane ? ++cachedPlane.measurements : 1,
     lastSeen: now,
   });
 }
 
 function logPlanes(planes) {
-  const timestamp = (epoch) => new Date(epoch).toISOString();
-  planes.forEach(plane => logger.write(`${timestamp(plane.lastSeen)},${plane.hex},${plane.flight.trim()},${plane.closestDistance}, ${plane.measurements}`));
+  planes.forEach(plane => logger.write(`${toString(plane)}\n`));
 }
 
-function getDistance(lat, lon) {
+function toString(plane) {
+  const timestamp = (epoch) => new Date(epoch).toISOString();
+  return [
+    timestamp(plane.lastSeen),
+    plane.hex,
+    plane.flight.trim(),
+    plane.closestDistance.toFixed(1),
+    plane.measurements
+  ].toString();
+  
+}
+
+function getDistance({lat, lon}) {
   const toRad = (angle) => (angle * Math.PI) / 180;
   
   const R = 6371; // Radius of the Earth in km
