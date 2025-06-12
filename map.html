@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map { 
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            const URL = 'passing-planes.log';
+            const queryString = new URLSearchParams(window.location.search);
+            const mapViewLat = queryString.get('lat') ?? 52;
+            const mapViewLon = queryString.get('lon') ?? 4;
+
+            // reference to the map and set its default view
+            var map = L.map('map').setView([mapViewLat, mapViewLon], 10);
+
+            // set the tile server
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            // show data of planes that have passed
+            fetch(URL)
+                .then(plotPlanes)
+                .catch(err => console.log(err.message));
+
+            async function plotPlanes(response) {
+                if (!response.ok) {
+                    throw new Error(`Response not OK: ${response.status}`);
+                }
+
+                const planeData = await response.text();
+                const planeDataLines = planeData.split('\n');
+                planeDataLines
+                  .map(line => line.split(','))
+                  .filter(planData => planeData.length >= 8)
+                  .forEach(data => L.marker([data[4], data[5]]).addTo(map));
+            }
+        </script>
+    </body>
+</html>
