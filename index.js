@@ -1,7 +1,7 @@
 const fs = require('fs')
 
-// const URL = 'http://172.17.0.1:8080/data.json';
-const URL = 'http://localhost:8080/data.json';
+const URL = 'http://172.17.0.1:8080/data.json';
+// const URL = 'http://localhost:8080/data.json';
 const POLLING_INTERVAL = 5 * 1000; // 5s
 const LAT_HOME = Number(process.env.LAT_HOME) || 52;
 const LON_HOME = Number(process.env.LON_HOME) || 4;
