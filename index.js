@@ -3,6 +3,7 @@ const fs = require('fs')
 const URL = 'http://172.17.0.1:8080/data.json';
 // const URL = 'http://localhost:8080/data.json';
 const POLLING_INTERVAL = 5 * 1000; // 5s
+const CACHE_EVICTION_TIME = 2 * 60 * 1000; // 2 minutes
 const LAT_HOME = Number(process.env.LAT_HOME) || 52;
 const LON_HOME = Number(process.env.LON_HOME) || 4;
 const R = 6371; // Radius of the earth in km
@@ -24,10 +25,9 @@ function logPlanesNearby() {
 
   // write data to log of planes that have left the local area
   const now = Date.now(); // millis since epoch
-  const expirationTime = .5 * 60 * 1000; // 2 minutes
   const expiredPlanes = planes.values()
     .toArray()
-    .filter(plane => now - plane.lastSeen >= expirationTime);
+    .filter(plane => now - plane.lastSeen >= CACHE_EVICTION_TIME);
 
   logPlanes(expiredPlanes);
 
