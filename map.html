@@ -66,14 +66,14 @@
             }
 
             function getIcon(altitude, track) {
-                const rotation = -45 + track; // plane emoji is rotated 45 deg on most systems
+                const rotation = -45 + Number(track); // plane emoji is rotated 45 deg on most systems
                 const html = `<div class="plane-icon" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
                 return L.divIcon({html, className:'plane-icon', iconSize: [20, 20]});
             }
 
             function getAltitudeColor(altitude) {
                 const maximumAltitude = 40000;
-                const relativeAltitude = Math.min(altitude / maximumAltitude, 1);
+                const relativeAltitude = Math.min(Number(altitude) / maximumAltitude, 1);
 
                 const hue = 50 + Math.floor(310 * relativeAltitude); // between yellow (50) and red (360)
                 return `hsl(${hue}, 100%, 50%)`;
