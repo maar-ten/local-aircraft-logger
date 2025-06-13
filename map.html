@@ -66,7 +66,7 @@
             }
 
             function getIcon(track, altitude) {
-                const rotation = -45 + 360 - track;
+                const rotation = -45 + track; // plane emoji is rotated 45 deg on most systems
                 const html = `<div class="plane-icon" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
                 return L.divIcon({html, className:'plane-icon', iconSize: [20, 20]});
             }
