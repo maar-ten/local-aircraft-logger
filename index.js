@@ -66,6 +66,8 @@ function updatePlanes(plane) {
     closestDistanceTime: now,
     closestDistanceLat: plane.lat,
     closestDistanceLon: plane.lon,
+    closestDistanceAltitude: plane.altitude,
+    closestDistanceTrack: plane.track,
     measurements: cachedPlane ? ++cachedPlane.measurements : 1,
     lastSeen: now,
   });
@@ -85,6 +87,8 @@ function toString(plane) {
     plane.closestDistanceLat,
     plane.closestDistanceLon,
     plane.closestDistance.toFixed(1),
+    plane.closestDistanceAltitude,
+    plane.closestDistanceTrack,
     plane.measurements
   ].toString();
 }

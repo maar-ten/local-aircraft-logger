@@ -8,15 +8,17 @@
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
         <style>
-            html, body {
+            html, body, #map {
                 margin: 0;
                 padding: 0;
+                height: 100%;
+                width: 100vw;
             }
 
-            #map { 
-                position: absolute;
-                height: 100%;
-                width: 100%;
+            .plane-icon {
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
             }
         </style>
     </head>
@@ -53,14 +55,29 @@
                   .map(line => line.split(','))
                   .filter(planData => planeData.length >= 8)
                   .forEach(data => {
-                    const marker = L.marker([data[4], data[5]]).addTo(map);
+                    const marker = L.marker([data[4], data[5]], {icon: getIcon(100, 30000)}).addTo(map);
                     marker.bindPopup(getPopupText(data));
                   });
             }
 
             function getPopupText(data) {
-                return `hex: ${data[1]}<br>flight: ${data[2]}<br>time: ${data[3]}<br>distance: ${data[6]} km<br>seen #: ${data[7]}`;
+                return `hex: ${data[1]}<br>flight: ${data[2]}<br>time: ${data[3]}<br>distance: ${data[6]} km<br>altitude: ${data[7]} ft<br>track: ${data[8]}<br>seen #: ${data[9]}`;
             }
+
+            function getIcon(track, altitude) {
+                const rotation = -45 + 360 - track;
+                const html = `<div class="plane-icon" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
+                return L.divIcon({html, className:'plane-icon', iconSize: [20, 20]});
+            }
+
+            function getAltitudeColor(altitude) {
+                const maximumAltitude = 40000;
+                const relativeAltitude = Math.min(altitude / maximumAltitude, 1);
+
+                const hue = 50 + Math.floor(310 * relativeAltitude); // between yellow (50) and red (360)
+                return `hsl(${hue}, 100%, 50%)`;
+            }
+
         </script>
     </body>
 </html>
