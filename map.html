@@ -18,8 +18,11 @@
 
             .plane-icon {
                 border-radius: 50%;
-                width: 20px;
-                height: 20px;
+                border: 1px solid white;
+                padding-left: 1px;
+                box-shadow: 0 0 5px 1px grey;
+                text-shadow: 0 0 4px #fff;
+                font-size: 19px;
             }
         </style>
     </head>
@@ -68,7 +71,7 @@
             function getIcon(altitude, track) {
                 const rotation = -45 + Number(track); // plane emoji is rotated 45 deg on most systems
                 const html = `<div class="plane-icon" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
-                return L.divIcon({html, className:'plane-icon', iconSize: [20, 20]});
+                return L.divIcon({html, className: '', iconSize: [30, 30]});
             }
 
             function getAltitudeColor(altitude) {
