@@ -64,6 +64,8 @@
                   .filter(planData => planeData.length >= 8)
                   .forEach(data => {
                     const marker = L.marker([data[4], data[5]], {icon: getIcon(data[7], data[8])}).addTo(map);
+                    marker.on('mouseover', () => marker.setZIndexOffset(100000));
+                    marker.on('mouseout', () => marker.setZIndexOffset(0));
                     marker.bindPopup(getPopupText(data));
                   });
             }
