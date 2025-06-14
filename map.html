@@ -56,7 +56,7 @@
             // show data of planes that have passed
             fetch(PAST_PLANE_DATA_URL)
                 .then(plotPlanes)
-                .catch(err => console.log([err.lineNumber,err.columnNumber], err.message));
+                .catch(err => console.log(`[${err.lineNumber},${err.columnNumber}]`, err.message));
 
             async function plotPlanes(response) {
                 if (!response.ok) {
@@ -108,11 +108,11 @@
                 return `hsl(${hue}, 100%, 50%)`;
             }
 
-            function plotLivePlanes(planes) {
+            function fetchLivePlanes(planes) {
                 // get and process life plane data from dump1090
                 fetch(LIVE_PLANE_DATA_URL)
                     .then(plotLiveData)
-                    .catch(err => console.log([err.lineNumber, err.columnNumber], err.message));
+                    .catch(err => console.log(`[${err.lineNumber},${err.columnNumber}]`, err.message));
             }
 
             async function plotLiveData(response) {
@@ -147,7 +147,7 @@
                 marker.setTooltipContent(getPopupText(plane));
             }
 
-            // setInterval(plotLivePlanes, POLLING_INTERVAL);
+            setInterval(fetchLivePlanes, POLLING_INTERVAL);
 
         </script>
     </body>
