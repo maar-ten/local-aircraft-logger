@@ -33,13 +33,19 @@
     <body>
         <div id="map"></div>
         <script>
-            const URL = 'passing-planes.log';
+            const LIVE_PLANE_DATA_URL = `://${location.host}:8080/data.json`;
+            const PAST_PLANE_DATA = 'passing-planes.log';
+            const POLLING_INTERVAL = 15 * 1000; // 15s
+
             const queryString = new URLSearchParams(window.location.search);
             const mapViewLat = queryString.get('lat') ?? 52;
             const mapViewLon = queryString.get('lon') ?? 4;
 
             // reference to the map and set its default view
-            var map = L.map('map').setView([mapViewLat, mapViewLon], 10);
+            const map = L.map('map').setView([mapViewLat, mapViewLon], 10);
+
+            // these are for the live planes on the map
+            const livePlaneMarkers = new Map();
 
             // set the tile server
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -62,16 +68,30 @@
                 planeDataLines
                   .map(line => line.split(','))
                   .filter(planData => planeData.length >= 8)
-                  .forEach(data => {
-                    const marker = L.marker([data[4], data[5]], {icon: getIcon(data[7], data[8])}).addTo(map);
-                    marker.on('mouseover', () => marker.setZIndexOffset(100000));
-                    marker.on('mouseout', () => marker.setZIndexOffset(0));
-                    marker.bindPopup(getPopupText(data));
-                  });
+                  .map(arr => {
+                    hex: arr[1];
+                    flight: arr[2];
+                    time: arr[3];
+                    lat: arr[4];
+                    lon: arr[5];
+                    distance: arr[6];
+                    altitude: arr[7];
+                    track: arr[8];
+                    measurements: arr[9];
+                  })
+                  .forEach(getMarker);
             }
 
-            function getPopupText(data) {
-                return `hex: ${data[1]}<br>flight: ${data[2]}<br>time: ${data[3]}<br>distance: ${data[6]} km<br>altitude: ${data[7]} ft<br>track: ${data[8]}<br>seen #: ${data[9]}`;
+            function getMarker(plane) {
+                const marker = L.marker([plane.lat, plane.lon], {icon: getIcon(plane.altitude, plane.track)}).addTo(map);
+                marker.on('mouseover', () => marker.setZIndexOffset(100000));
+                marker.on('mouseout', () => marker.setZIndexOffset(0));
+                marker.bindPopup(getPopupText(plane));
+                return marker;
+            } 
+
+            function getPopupText(plane) {
+                return `hex: ${plane.hex}<br>flight: ${plane.flight}<br>time: ${plane.time}<br>distance: ${plane.distance} km<br>altitude: ${plane.altitude} ft<br>track: ${plane.track}<br>seen #: ${plane.measurements}`;
             }
 
             function getIcon(altitude, track) {
@@ -87,6 +107,44 @@
                 const hue = 50 + Math.floor(310 * relativeAltitude); // between yellow (50) and red (360)
                 return `hsl(${hue}, 100%, 50%)`;
             }
+
+            function plotLivePlanes(planes) {
+                // get and process life plane data from dump1090
+                fetch(PAST_PLANE_DATA)
+                    .then(plotLiveData)
+                    .catch(err => console.log(err.message));
+            }
+
+            async function plotLiveData(response) {
+                if (!response.ok) {
+                    throw new Error(`Response not OK: ${response.status}`);
+                }
+
+                // update live data
+                const planeDataArr = await response.json();
+                planeDataArr.forEach(plotPlanes);
+
+                // remove stale data
+                livePlaneMarkers.keys().forEach(hex => {
+                    if (!planeDataArr.find(plane => plane.hex === hex)) {
+                        livePlaneMarkers.delete(hex);
+                    }
+                });
+            }
+
+            function plotPlanes(plane) {
+                plane.distance = plane.closestDistance; // will be undefined otherwise
+
+                if (!livePlaneMarkers.has(plane.hex)) {
+                    livePlaneMarkers.set(plane.hex, getMarker(plane));
+                }
+
+                const marker = livePlaneMarkers.get(plane.hex);
+                marker.setLatLon([plane.lat,plane.lon]);
+                marker.setTooltipContent(getPopupText(plane));
+            }
+
+            setInterval(plotLivePlanes, POLLING_INTERVAL);
 
         </script>
     </body>
