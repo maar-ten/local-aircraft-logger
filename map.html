@@ -33,7 +33,7 @@
     <body>
         <div id="map"></div>
         <script>
-            const LIVE_PLANE_DATA_URL = `://${location.host}:8080/data.json`;
+            const LIVE_PLANE_DATA_URL = `http://${location.host}:8080/data.json`;
             const PAST_PLANE_DATA = 'passing-planes.log';
             const POLLING_INTERVAL = 15 * 1000; // 15s
 
@@ -110,7 +110,7 @@
 
             function plotLivePlanes(planes) {
                 // get and process life plane data from dump1090
-                fetch(PAST_PLANE_DATA)
+                fetch(LIVE_PLANE_DATA_URL)
                     .then(plotLiveData)
                     .catch(err => console.log(err.message));
             }
@@ -132,15 +132,18 @@
                 });
             }
 
+            const timestamp = (epoch) => new Date(epoch).toISOString();
+
             function plotPlanes(plane) {
-                plane.distance = plane.closestDistance; // will be undefined otherwise
+                plane.distance = plane.closestDistance.toFixed(1); // will be undefined otherwise
+                plane.time = timestamp(plane.closestDistanceTime);
 
                 if (!livePlaneMarkers.has(plane.hex)) {
                     livePlaneMarkers.set(plane.hex, getMarker(plane));
                 }
 
                 const marker = livePlaneMarkers.get(plane.hex);
-                marker.setLatLon([plane.lat,plane.lon]);
+                marker.setLatLng([plane.lat,plane.lon]);
                 marker.setTooltipContent(getPopupText(plane));
             }
 
