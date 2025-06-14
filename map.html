@@ -56,7 +56,7 @@
             // show data of planes that have passed
             fetch(URL)
                 .then(plotPlanes)
-                .catch(err => console.log(err.message));
+                .catch(err => console.log([err.lineNumber,err.columnNumber], err.message));
 
             async function plotPlanes(response) {
                 if (!response.ok) {
@@ -112,7 +112,7 @@
                 // get and process life plane data from dump1090
                 fetch(LIVE_PLANE_DATA_URL)
                     .then(plotLiveData)
-                    .catch(err => console.log(err.message));
+                    .catch(err => console.log([err.lineNumber, err.columnNumber], err.message));
             }
 
             async function plotLiveData(response) {
@@ -122,7 +122,7 @@
 
                 // update live data
                 const planeDataArr = await response.json();
-                planeDataArr.forEach(plotPlanes);
+                planeDataArr.forEach(plotLivePlanes);
 
                 // remove stale data
                 livePlaneMarkers.keys().forEach(hex => {
@@ -134,7 +134,7 @@
 
             const timestamp = (epoch) => new Date(epoch).toISOString();
 
-            function plotPlanes(plane) {
+            function plotLivePlanes(plane) {
                 plane.distance = plane.closestDistance.toFixed(1); // will be undefined otherwise
                 plane.time = timestamp(plane.closestDistanceTime);
 
@@ -147,7 +147,7 @@
                 marker.setTooltipContent(getPopupText(plane));
             }
 
-            setInterval(plotLivePlanes, POLLING_INTERVAL);
+            // setInterval(plotLivePlanes, POLLING_INTERVAL);
 
         </script>
     </body>
