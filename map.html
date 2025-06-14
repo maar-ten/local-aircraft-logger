@@ -67,7 +67,7 @@
                 const planeDataLines = planeData.split('\n');
                 planeDataLines
                   .map(line => line.split(','))
-                  .filter(planData => planeData.length >= 8)
+                  .filter(planeData => planeData.length >= 8)
                   .map(arr => {
                     hex: arr[1];
                     flight: arr[2];
