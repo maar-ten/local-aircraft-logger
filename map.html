@@ -34,7 +34,7 @@
         <div id="map"></div>
         <script>
             const LIVE_PLANE_DATA_URL = `http://${location.hostname}:8080/data.json`;
-            const PAST_PLANE_DATA = 'passing-planes.log';
+            const PAST_PLANE_DATA_URL = 'passing-planes.log';
             const POLLING_INTERVAL = 15 * 1000; // 15s
 
             const queryString = new URLSearchParams(window.location.search);
@@ -54,7 +54,7 @@
             }).addTo(map);
 
             // show data of planes that have passed
-            fetch(URL)
+            fetch(PAST_PLANE_DATA_URL)
                 .then(plotPlanes)
                 .catch(err => console.log([err.lineNumber,err.columnNumber], err.message));
 
