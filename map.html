@@ -84,7 +84,7 @@
 
             function getMarker(plane) {
                 const marker = L.marker([plane.lat, plane.lon], {icon: getIcon(plane.altitude, plane.track)}).addTo(map);
-                marker.on('mouseover', () => marker.setZIndexOffset(100000));
+                marker.on('mouseover', () => marker.setZIndexOffset(10000));
                 marker.on('mouseout', () => marker.setZIndexOffset(0));
                 marker.bindPopup(getPopupText(plane));
                 return marker;
@@ -135,8 +135,8 @@
             const timestamp = (epoch) => new Date(epoch).toISOString();
 
             function plotLivePlanes(plane) {
-                plane.distance = plane.closestDistance.toFixed(1); // will be undefined otherwise
-                plane.time = timestamp(plane.closestDistanceTime);
+                plane.distance = ''; // will be undefined otherwise
+                plane.time = new Date().toISOString();
 
                 if (!livePlaneMarkers.has(plane.hex)) {
                     livePlaneMarkers.set(plane.hex, getMarker(plane));
@@ -144,7 +144,8 @@
 
                 const marker = livePlaneMarkers.get(plane.hex);
                 marker.setLatLng([plane.lat,plane.lon]);
-                marker.setTooltipContent(getPopupText(plane));
+                marker.setZIndexOffset(20000);
+                marker.setPopupContent(getPopupText(plane));
             }
 
             setInterval(fetchLivePlanes, POLLING_INTERVAL);
