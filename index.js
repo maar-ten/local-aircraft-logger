@@ -1,7 +1,6 @@
 const fs = require('fs')
 const http = require('http');
 
-const HOSTNAME = '127.0.0.1';
 const PORT = 8090;
 
 const URL = 'http://172.17.0.1:8080/data.json';
@@ -121,6 +120,6 @@ const server = http.createServer((req, res) => {
   res.end(JSON.stringify(planes.values().toArray()));
 });
 
-server.listen(PORT, HOSTNAME, () => {
-  console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+server.listen(PORT, () => {
+  console.log(`Server running at port: ${PORT}`);
 });
