@@ -33,7 +33,7 @@
     <body>
         <div id="map"></div>
         <script>
-            const LIVE_PLANE_DATA_URL = `http://${location.host}:8080/data.json`;
+            const LIVE_PLANE_DATA_URL = `http://${location.hostname}:8080/data.json`;
             const PAST_PLANE_DATA = 'passing-planes.log';
             const POLLING_INTERVAL = 15 * 1000; // 15s
 
