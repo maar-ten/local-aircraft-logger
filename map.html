@@ -54,9 +54,9 @@
             }).addTo(map);
 
             // show data of planes that have passed
-            fetch(PAST_PLANE_DATA_URL)
-                .then(plotPlanes)
-                .catch(err => console.log(`[${err.lineNumber},${err.columnNumber}]`, err.message));
+            // fetch(PAST_PLANE_DATA_URL)
+            //     .then(plotPlanes)
+            //     .catch(err => console.log(`[${err.lineNumber},${err.columnNumber}]`, err.message));
 
             async function plotPlanes(response) {
                 if (!response.ok) {
@@ -143,6 +143,7 @@
                 }
 
                 const marker = livePlaneMarkers.get(plane.hex);
+                marker.setIcon(getIcon(plane.altitude, plane.track));
                 marker.setLatLng([plane.lat,plane.lon]);
                 marker.setZIndexOffset(20000);
                 marker.setPopupContent(getPopupText(plane));
