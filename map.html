@@ -61,9 +61,9 @@
             }).addTo(map);
 
             // show data of planes that have passed
-            // fetch(PAST_PLANE_DATA_URL)
-            //     .then(plotPlanes)
-            //     .catch(err => console.log(`[${err.lineNumber},${err.columnNumber}]`, err.message));
+            fetch(PAST_PLANE_DATA_URL)
+                .then(plotPlanes)
+                .catch(err => console.log(`[${err.lineNumber},${err.columnNumber}]`, err.message));
 
             async function plotPlanes(response) {
                 if (!response.ok) {
