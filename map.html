@@ -35,7 +35,7 @@
         <script>
             const LIVE_PLANE_DATA_URL = `http://${location.hostname}:8080/data.json`;
             const PAST_PLANE_DATA_URL = 'passing-planes.log';
-            const POLLING_INTERVAL = 15 * 1000; // 15s
+            const POLLING_INTERVAL = 2 * 1000; // 2s
 
             const queryString = new URLSearchParams(window.location.search);
             const mapViewLat = queryString.get('lat') ?? 52;
