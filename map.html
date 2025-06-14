@@ -68,17 +68,17 @@
                 planeDataLines
                   .map(line => line.split(','))
                   .filter(planeData => planeData.length >= 8)
-                  .map(arr => {
-                    hex: arr[1];
-                    flight: arr[2];
-                    time: arr[3];
-                    lat: arr[4];
-                    lon: arr[5];
-                    distance: arr[6];
-                    altitude: arr[7];
-                    track: arr[8];
-                    measurements: arr[9];
-                  })
+                  .map(arr => ({
+                    hex: arr[1],
+                    flight: arr[2],
+                    time: arr[3],
+                    lat: arr[4],
+                    lon: arr[5],
+                    distance: arr[6],
+                    altitude: arr[7],
+                    track: arr[8],
+                    measurements: arr[9],
+                  }))
                   .forEach(getMarker);
             }
 
