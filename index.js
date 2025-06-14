@@ -1,4 +1,8 @@
 const fs = require('fs')
+const http = require('http');
+
+const HOSTNAME = '127.0.0.1';
+const PORT = 8090;
 
 const URL = 'http://172.17.0.1:8080/data.json';
 // const URL = 'http://localhost:8080/data.json';
@@ -54,7 +58,7 @@ function updatePlanes(plane) {
     planes.set(plane.hex, {
       ...cachedPlane,
       measurements: ++cachedPlane.measurements,
-      lastSeen: now
+      lastSeen: now,
     });
     return;
   }
@@ -110,3 +114,13 @@ function toRad(angle) {
 }
 
 setInterval(logPlanesNearby, POLLING_INTERVAL);
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(planes.values().toArray()));
+});
+
+server.listen(PORT, HOSTNAME, () => {
+  console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+});
