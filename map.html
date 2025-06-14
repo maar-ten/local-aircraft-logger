@@ -47,6 +47,7 @@
             const LIVE_PLANE_DATA_URL = `http://${location.hostname}:8080/data.json`;
             const PAST_PLANE_DATA_URL = 'passing-planes.log';
             const POLLING_INTERVAL = 2 * 1000; // 2s
+            const CUTOFF_TIME = 24 * 60 * 60 * 1000; // 24h 
 
             const queryString = new URLSearchParams(window.location.search);
             const mapViewLat = queryString.get('lat') ?? 52;
@@ -74,6 +75,7 @@
                     throw new Error(`Response not OK: ${response.status}`);
                 }
 
+                const now = Date.now();
                 const planeData = await response.text();
                 const planeDataLines = planeData.split('\n');
                 planeDataLines
@@ -89,7 +91,9 @@
                     altitude: arr[7],
                     track: arr[8],
                     measurements: arr[9],
+                    opacity: 1 - ((now - arr[3]) / CUTOFF_TIME)
                   }))
+                  .filter(({time}) => now - time < CUTOFF_TIME)
                   .forEach(getMarker);
             }
 
@@ -98,6 +102,7 @@
                 marker.on('mouseover', () => marker.setZIndexOffset(10000));
                 marker.on('mouseout', () => marker.setZIndexOffset(0));
                 marker.bindPopup(getPopupText(plane));
+                marker.setOpacity(plane.opacity);
                 return marker;
             } 
 
@@ -108,7 +113,7 @@
             function getIcon(altitude, track, live = false) {
                 const rotation = -45 + Number(track); // plane emoji is rotated 45 deg on most systems
                 const iconClass = live ? 'plane-icon-live' : 'plane-icon';
-                const html = `<div class="${iconClass}" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
+                const html = `<div class="${iconClass}" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)};">✈️</div>`;
                 return L.divIcon({html, className: '', iconSize: [30, 30]});
             }
 
