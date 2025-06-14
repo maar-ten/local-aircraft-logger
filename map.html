@@ -16,17 +16,24 @@
                 width: 100vw;
             }
 
-            .plane-icon {
+            .plane-icon, .plane-icon-live {
                 border-radius: 50%;
                 border: 1px solid white;
                 padding-left: 1px;
-                box-shadow: 0 0 5px 1px grey;
                 text-shadow: 0 0 4px #fff;
                 font-size: 19px;
 
                 &:hover {
                     box-shadow: 0 0 5px 1px black;                    
                 }
+            }
+
+            .plane-icon {
+                box-shadow: 0 0 5px 1px grey;
+            }
+
+            .plane-icon-live {
+                box-shadow: 0 0 0 10px rgb(100, 100, 100, .5);
             }
         </style>
     </head>
@@ -94,9 +101,10 @@
                 return `hex: ${plane.hex}<br>flight: ${plane.flight}<br>time: ${plane.time}<br>distance: ${plane.distance} km<br>altitude: ${plane.altitude} ft<br>track: ${plane.track}<br>seen #: ${plane.measurements}`;
             }
 
-            function getIcon(altitude, track) {
+            function getIcon(altitude, track, live = false) {
                 const rotation = -45 + Number(track); // plane emoji is rotated 45 deg on most systems
-                const html = `<div class="plane-icon" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
+                const iconClass = live ? 'plane-icon-live' : 'plane-icon';
+                const html = `<div class="${iconClass}" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)}">✈️</div>`;
                 return L.divIcon({html, className: '', iconSize: [30, 30]});
             }
 
@@ -128,6 +136,7 @@
                 livePlaneMarkers.keys().forEach(hex => {
                     if (!planeDataArr.find(plane => plane.hex === hex)) {
                         livePlaneMarkers.delete(hex);
+                        livePlaneMarkers.get(hex).remove();
                     }
                 });
             }
@@ -143,7 +152,7 @@
                 }
 
                 const marker = livePlaneMarkers.get(plane.hex);
-                marker.setIcon(getIcon(plane.altitude, plane.track));
+                marker.setIcon(getIcon(plane.altitude, plane.track, true));
                 marker.setLatLng([plane.lat,plane.lon]);
                 marker.setZIndexOffset(20000);
                 marker.setPopupContent(getPopupText(plane));
