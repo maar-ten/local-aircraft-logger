@@ -13,7 +13,7 @@ console.log(`Fetching data from: ${URL} every ${POLLING_INTERVAL / 1000} sec.`);
 
 const planes = new Map();
 
-const logger = fs.createWriteStream('passing-planes.log', {
+const logger = fs.createWriteStream('./public/passing-planes.log', {
   flags: 'a' // append data to the file
 })
 
