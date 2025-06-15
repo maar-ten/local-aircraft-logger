@@ -1,0 +1,13 @@
+services:
+  web:
+    image: node:22-alpine
+    env_file: .env
+    working_dir: 
+    ports:
+      - 8090:8090
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_DB: exampledb

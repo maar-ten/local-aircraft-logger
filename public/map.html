@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+        <script type="module" src="index.js"></script>
+
+        <style>
+            html, body, #map {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                width: 100vw;
+            }
+
+            .plane-icon, .plane-icon-live {
+                border-radius: 50%;
+                border: 1px solid white;
+                padding-left: 1px;
+                text-shadow: 0 0 4px #fff;
+                font-size: 19px;
+            }
+
+            .plane-icon {
+                box-shadow: 0 0 5px 1px grey;
+
+                &:hover {
+                    box-shadow: 0 0 5px 1px black;
+                }
+            }
+
+            .plane-icon-live {
+                box-shadow: 0 0 0 10px rgb(100, 100, 100, .5);
+
+                &:hover {
+                    box-shadow: 0 0 0 10px rgb(255, 255, 255, .5);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+    </body>
+</html>
