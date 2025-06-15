@@ -7,14 +7,6 @@ export class LeafletMap {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.map);
     }
-
-    addPassedPlane() {
-
-    }
-
-    addLivePlane() {
-        
-    }
 }
 
 export function addMarker(plane, map) {

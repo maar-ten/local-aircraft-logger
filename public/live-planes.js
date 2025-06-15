@@ -25,6 +25,7 @@ const timestamp = (epoch) => new Date(epoch).toISOString();
 function plotPlanes(plane, map) {
     plane.distance = ''; // will be undefined otherwise
     plane.time = new Date().toISOString();
+    plane.opacity = 1;
 
     if (!livePlaneMarkers.has(plane.hex)) {
         livePlaneMarkers.set(plane.hex, addMarker(plane, map));

@@ -1,6 +1,6 @@
 import { addMarker } from './leaflet.js';
 
-const CUTOFF_TIME = 24 * 60 * 60 * 1000; // 24h 
+const CUTOFF_TIME = 1 * 60 * 60 * 1000; // 1h 
 
 export async function plotPastPlanes(response, map) {
     if (!response.ok) {
@@ -23,7 +23,7 @@ export async function plotPastPlanes(response, map) {
             altitude: arr[7],
             track: arr[8],
             measurements: arr[9],
-            opacity: 1 - ((now - arr[3]) / CUTOFF_TIME)
+            opacity: 1 - ((now - new Date(arr[3])) / CUTOFF_TIME)
         }))
         .filter(({ time }) => now - new Date(time) < CUTOFF_TIME)
         .forEach(plane => addMarker(plane, map));
