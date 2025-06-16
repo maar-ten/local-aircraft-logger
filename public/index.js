@@ -1,6 +1,6 @@
 import { LeafletMap } from './leaflet.js';
 import { plotPastPlanes } from './passed-planes.js';
-import { plotPastPlanePaths } from '.passed-plane-paths.js';
+import { plotPastPlanePaths } from './passed-plane-paths.js';
 import { plotLivePlanes } from './live-planes.js';
 
 const PAST_PLANE_DATA_URL = 'passing-planes.log';
