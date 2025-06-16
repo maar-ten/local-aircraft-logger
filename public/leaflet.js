@@ -18,18 +18,35 @@ export function addMarker(plane, map) {
     return marker;
 }
 
-export function getIcon(altitude, track, live = false) {
+export function addPath(plane, map) {
+    return L.polyline([[plane.lat, plane.lon]]).addTo(map);
+}
+
+export function updateMarker(marker, plane) {
+    marker.setIcon(getIcon(plane.altitude, plane.track, true));
+    marker.setLatLng([plane.lat, plane.lon]);
+    marker.setZIndexOffset(20000);
+    marker.setPopupContent(getPopupText(plane));
+}
+
+export function updatePath(path, plane) {
+    const coords = path.getLatLngs();
+    coords.push([plane.lat, plane.lon]);
+    path.setLatLngs(coords);
+}
+
+function getIcon(altitude, track, live = false) {
     const rotation = -45 + Number(track); // -45 to correct the plane emoji's default rotation on most systems
     const iconClass = live ? 'plane-icon-live' : 'plane-icon';
     const html = `<div class="${iconClass}" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)};">✈️</div>`;
     return L.divIcon({ html, className: '', iconSize: [30, 30] });
 }
 
-export function getPopupText(plane) {
+function getPopupText(plane) {
     return `hex: ${plane.hex}<br>flight: ${plane.flight}<br>time: ${plane.time}<br>distance: ${plane.distance} km<br>altitude: ${plane.altitude} ft<br>track: ${plane.track}<br>seen #: ${plane.measurements}`;
 }
 
-export function getAltitudeColor(altitude) {
+function getAltitudeColor(altitude) {
     const maximumAltitude = 40000;
     const relativeAltitude = Math.min(Number(altitude) / maximumAltitude, 1);
 

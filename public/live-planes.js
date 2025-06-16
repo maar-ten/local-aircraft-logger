@@ -1,21 +1,28 @@
-import { addMarker, getIcon, getPopupText } from './leaflet.js';
+import { addMarker, addPath, updateMarker, updatePath } from './leaflet.js';
 
 class Plane {
-    hex;    // unique plane code
-    marker; // reference to the leaflet marker
-    path;   // array of 1090plane
+    hex;
+    marker;
+    path;
 
-    constructor(plane, marker) {
+    constructor(plane, map) {
         this.hex = plane.hex;
-        this.marker = marker;
-        this.path = [{
-            ...plane,
-            time: Date.now()
-        }];
+        this.marker = addMarker(plane, map);
+        this.path = addPath(plane, map);
+    }
+
+    update(plane) {
+      updateMarker(this.marker, plane);
+      updatePath(this.path, plane);
+    }
+
+    remove() {
+        this.marker.remove();
+        this.path.remove();
     }
 }
 
-const livePlaneMarkers = new Map();
+const livePlaneCache = new Map();
 
 export async function plotLivePlanes(response, map) {
     if (!response.ok) {
@@ -27,10 +34,10 @@ export async function plotLivePlanes(response, map) {
     planeDataArr.forEach(plane => plotPlanes(plane, map));
 
     // remove stale data
-    livePlaneMarkers.keys().forEach(hex => {
+    livePlaneCache.keys().forEach(hex => {
         if (!planeDataArr.find(plane => plane.hex === hex)) {
-            livePlaneMarkers.get(hex).marker.remove();
-            livePlaneMarkers.delete(hex);
+            livePlaneCache.get(hex).remove(); // remove from map
+            livePlaneCache.delete(hex); // remove from cache
         }
     });
 }
@@ -42,19 +49,11 @@ function plotPlanes(plane, map) {
     plane.time = new Date().toISOString();
     plane.opacity = 1;
 
-    if (livePlaneMarkers.has(plane.hex)) {
-        const cachedPlane = livePlaneMarkers.get(plane.hex);
-        cachedPlane.path.push(plane);
-        updateMarker(cachedPlane.marker, plane);
+    if (livePlaneCache.has(plane.hex)) {
+        const cachedPlane = livePlaneCache.get(plane.hex);
+        cachedPlane.update(plane);
         return;
     }
 
-    livePlaneMarkers.set(plane.hex, new Plane(plane, addMarker(plane, map)));
-}
-
-function updateMarker(marker, plane) {
-    marker.setIcon(getIcon(plane.altitude, plane.track, true));
-    marker.setLatLng([plane.lat, plane.lon]);
-    marker.setZIndexOffset(20000);
-    marker.setPopupContent(getPopupText(plane));
+    livePlaneCache.set(plane.hex, new Plane(plane, map));
 }
