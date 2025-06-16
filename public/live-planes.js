@@ -1,20 +1,20 @@
 import { addMarker, addPath, updateMarker, updatePath } from './leaflet.js';
 
-class Plane {
+class Aircraft {
     hex;
     marker;
     path;
 
-    constructor(plane, map) {
-        this.hex = plane.hex;
-        this.marker = addMarker(plane, map);
-        this.path = addPath(plane, map);
+    constructor(aircraft, map) {
+        this.hex = aircraft.hex;
+        this.marker = addMarker(aircraft, map);
+        this.path = addPath(aircraft, map);
     }
 
-    update(plane) {
-      plane.measurements = this.updates() + 1;
-      updateMarker(this.marker, plane);
-      updatePath(this.path, plane);
+    update(aircraft) {
+      aircraft.measurements = this.updates() + 1;
+      updateMarker(this.marker, aircraft);
+      updatePath(this.path, aircraft);
     }
 
     remove() {
@@ -27,7 +27,7 @@ class Plane {
     }
 }
 
-const livePlaneCache = new Map();
+const aircraftCache = new Map();
 
 export async function plotLivePlanes(response, map) {
     if (!response.ok) {
@@ -35,30 +35,30 @@ export async function plotLivePlanes(response, map) {
     }
 
     // update live data
-    const planeDataArr = await response.json();
-    planeDataArr.forEach(plane => plotPlanes(plane, map));
+    const aircraftDataArr = await response.json();
+    aircraftDataArr.forEach(aircraft => plotAircrafts(aircraft, map));
 
     // remove stale data
-    livePlaneCache.keys().forEach(hex => {
-        if (!planeDataArr.find(plane => plane.hex === hex)) {
-            livePlaneCache.get(hex).remove(); // remove from map
-            livePlaneCache.delete(hex); // remove from cache
+    aircraftCache.keys().forEach(hex => {
+        if (!aircraftDataArr.find(aircraft => aircraft.hex === hex)) {
+            aircraftCache.get(hex).remove(); // remove from map
+            aircraftCache.delete(hex); // remove from cache
         }
     });
 }
 
-const timestamp = (epoch) => new Date(epoch).toISOString();
+const format = (epoch) => new Date(epoch).toLocaleString('sv', {timezone: TZ}).replace(' ', 'T');
 
-function plotPlanes(plane, map) {
-    plane.distance = ''; // will be undefined otherwise
-    plane.time = new Date().toISOString();
-    plane.opacity = 1;
+function plotAircrafts(aircraft, map) {
+    aircraft.distance = ''; // will be undefined otherwise
+    aircraft.time = format(Date.now());
+    aircraft.opacity = 1;
 
-    if (livePlaneCache.has(plane.hex)) {
-        const cachedPlane = livePlaneCache.get(plane.hex);
-        cachedPlane.update(plane);
+    if (aircraftCache.has(aircraft.hex)) {
+        const cachedPlane = aircraftCache.get(aircraft.hex);
+        cachedAircraft.update(aircraft);
         return;
     }
 
-    livePlaneCache.set(plane.hex, new Plane(plane, map));
+    aircraftCache.set(aircraft.hex, new Aircraft(aircraft, map));
 }
