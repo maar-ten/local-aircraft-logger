@@ -17,68 +17,69 @@ console.log(`Fetching data from: ${URL} every ${POLLING_INTERVAL / 1000} sec.`);
 // Locale of Sweden (sv) looks similar to ISO
 const format = (epoch) => new Date(epoch).toLocaleString('sv', {timezone: TZ}).replace(' ', 'T');
 
-const planes = new Map();
+const aircrafts = new Map();
 
-const logger = fs.createWriteStream('./public/passing-planes.log', {
+const logger = fs.createWriteStream('./public/passing-aircrafts.log', {
   flags: 'a' // append data to the file
 });
 
-const lowAltitudeLogger = fs.createWriteStream('./public/low-altitude-planes.log', {
+const lowAltitudeLogger = fs.createWriteStream('./public/low-altitude-aircrafts.log', {
   flags: 'a' // append data to the file
 });
 
-function monitorPlanesNearby() {
-  // get and process plane data from dump1090
+function monitorAircrafts() {
+  // get and process aircraft data from dump1090
   fetch(URL)
     .then(processResponse)
     .catch(err => console.log(err.message));
 
-  const expiredPlanes = getExpiredPlanes();
-  logPlanes(expiredPlanes);
+  const expiredAircrafts = getExpiredAircrafts();
+  logAircrafts(expiredAircrafts);
 
-  // remove expired planes
-  expiredPlanes.forEach(plane => planes.delete(plane.hex));
+  // remove expired aircrafts
+  expiredAircrafts.forEach(aircraft => aircrafts.delete(aircraft.hex));
 }
-setInterval(monitorPlanesNearby, POLLING_INTERVAL);
+setInterval(monitorAircrafts, POLLING_INTERVAL);
 
 async function processResponse(response) {
   if (!response.ok) {
     throw new Error(`Response not OK: ${response.status}`);
   }
 
-  const planeDataArr = await response.json();
-  planeDataArr.forEach(updatePlanes);
+  const aircraftDataArr = await response.json();
+  aircraftDataArr.forEach(updateAircrafts);
 }
 
-function updatePlanes(plane) {
-  if (planes.has(plane.hex)) {
-    planes.get(plane.hex).update(plane);
-  } else {
-    const newPlane = new Plane(plane);
-    planes.set(newPlane.hex, newPlane);
+function updateAircrafts(aircraft) {
+  if (aircrafts.has(aircraft.hex)) {
+    aircrafts.get(aircraft.hex).update(aircraft);
+    return;
   }
+
+  const newAircraft = new Aircraft(aircraft);
+  aircrafts.set(newAircraft.hex, newAircraft);
 }
 
-function getExpiredPlanes() {
+function getExpiredAircrafts() {
   const now = Date.now();
-  return planes.values()
+  return aircrafts.values()
     .toArray()
-    .filter(plane => now - plane.lastSeen >= CACHE_EVICTION_TIME);
+    .filter(aircraft => now - aircraft.lastSeen >= CACHE_EVICTION_TIME);
 }
 
-function logPlanes(planes) {
-  planes.forEach(plane => {
-    logger.write(`${plane}\n`);
+function logAircrafts(aircrafts) {
+  aircrafts.forEach(aircraft => {
+    logger.write(`${aircraft}\n`);
 
-    if (plane.closestDistancePlane.altitude <= LOW_ALTITUDE_CUTOFF) {
-      lowAltitudeLogger.write(`${serializePlanePath(plane)}\n`);
+    if (aircraft.closestDistanceAircraft.altitude <= LOW_ALTITUDE_CUTOFF) {
+      lowAltitudeLogger.write(`${serializePath(aircraft)}\n`);
     }
 });
 }
 
-function serializePlanePath(plane) {
+function serializePath(aircraft) {
   // use semi-colons because the path array already uses commas
-  return `${format(plane.lastSeen)};${plane.hex};${plane.path}`;
+  return `${format(aircraft.lastSeen)};${aircraft.hex};${aircraft.path}`;
 }
 
 function getDistance({lat, lon}) {
@@ -97,40 +98,40 @@ function toRad(angle) {
   return (angle * Math.PI) / 180;
 }
 
-class Plane {
+class Aircraft {
   hex;
-  plane;
+  aircraft;
   path = [];
   lastSeen;
-  closestDistancePlane;
+  closestDistanceAircraft;
   closestDistance;
   closestDistanceTime;
 
-  constructor(plane) {
+  constructor(aircraft) {
     const now = Date.now();
 
-    this.hex = plane.hex;
-    this.plane = plane;
-    this.path.push([plane.lat, plane.lon]);
-    this.closestDistance = getDistance(plane);
+    this.hex = aircraft.hex;
+    this.aircraft = aircraft;
+    this.path.push([aircraft.lat, aircraft.lon]);
+    this.closestDistance = getDistance(aircraft);
     this.closestDistanceTime = now;
-    this.closestDistancePlane = plane;
+    this.closestDistanceAircraft = aircraft;
     this.lastSeen = now;
   }
 
-  update(plane) {
-    const distance = getDistance(plane);
+  update(aircraft) {
+    const distance = getDistance(aircraft);
     const now = Date.now();
 
     if (distance < this.closestDistance) {
       this.closestDistance = distance;
       this.closestDistanceTime = now;
-      this.closestDistancePlane = plane;
+      this.closestDistanceAircraft = aircraft;
     }
 
     this.lastSeen = now;
 
-    const coords = [plane.lat, plane.lon];
+    const coords = [aircraft.lat, aircraft.lon];
     if (!this.equalLastCoords(coords)) {
       this.path.push(coords);
     }
@@ -145,14 +146,14 @@ class Plane {
     return [
       format(this.lastSeen),
       this.hex,
-      this.closestDistancePlane.flight.trim(),
+      this.closestDistanceAircraft.flight.trim(),
       format(this.closestDistanceTime),
-      this.closestDistancePlane.lat,
-      this.closestDistancePlane.lon,
+      this.closestDistanceAircraft.lat,
+      this.closestDistanceAircraft.lon,
       this.closestDistance.toFixed(1),
-      this.closestDistancePlane.altitude,
-      this.closestDistancePlane.speed,
-      this.closestDistancePlane.track,
+      this.closestDistanceAircraft.altitude,
+      this.closestDistanceAircraft.speed,
+      this.closestDistanceAircraft.track,
       this.path.length
     ].toString();
   }
