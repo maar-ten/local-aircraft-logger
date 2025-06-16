@@ -28,3 +28,15 @@ Go to http://localhost:3000/map.html
 
 ## My setup
 This application can run on a Raspberry Pi 2 Model B from 2015 with a A 900MHz quad-core ARM Cortex-A7 CPU and 1GB RAM and a 12GB memory card without any problems.
+
+## My take aways
+Decoding of the Automatic Dependent Surveillance-Broadcast messages of aircrafts is weird, but facinating and super efficient.
+
+Take the location for instance. They could just send their geo-coordinates (lat,lon), but that would take up all of the 112 bit message.
+Instead they sent grid locations of two separate grids (in 2 messages) where the plotted points only line up at one specific point if you would lay both grids on top of each other.
+Because the grids they use are fixed and part of the specification, you only need 68 bits to encode it.
+It's called [compact position system](https://mode-s.org/1090mhz/content/ads-b/3-airborne-position.html#an-over-simplified-example).
+
+Another is the altitude encoding. They can encode it in 25ft or 100ft increments or just put meters in that field. Which unit it is, is encoded in the same field using 2 special bits ([altitude decoding](https://mode-s.org/1090mhz/content/ads-b/3-airborne-position.html#altitude-decoding)).
+
+If you want to know more you should take a look at [The 1090 Megahertz Riddle](https://mode-s.org/1090mhz/).
