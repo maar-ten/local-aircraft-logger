@@ -18,7 +18,7 @@ A Raspberry Pi from 2015 with 1GB of memory suffices to run this application.
 ### 2. Start dump1090
 See [installing dump1090](https://github.com/antirez/dump1090?tab=readme-ov-file#installation) and then run:
 
-`nohup ./dump1090 --net > >/dev/null 2>&1 &`
+`nohup ./dump1090 --net > /dev/null 2>&1 &`
 
 ### 3. Start docker project
 `docker compose up -d`

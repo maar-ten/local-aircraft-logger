@@ -50,7 +50,16 @@ function getIcon(altitude, track, live = false) {
 }
 
 function getPopupText(plane) {
-    return `hex: ${plane.hex}<br>flight: ${plane.flight}<br>time: ${plane.time}<br>distance: ${plane.distance} km<br>altitude: ${plane.altitude} ft<br>track: ${plane.track}<br>seen #: ${plane.measurements}`;
+    return ''.concat(
+        `hex: <a href="https://map.opensky-network.org/?icao=${plane.hex}">${plane.hex}</a>`,
+        `<br>flight: ${plane.flight}`,
+        `<br>time: ${plane.time}`,
+        `<br>distance: ${plane.distance} km`,
+        `<br>altitude: ${plane.altitude} ft`,
+        `<br>speed: ${plane.speed}`,
+        `<br>track: ${plane.track}`,
+        `<br>seen #: ${plane.measurements}`
+    );
 }
 
 function getAltitudeColor(altitude) {
