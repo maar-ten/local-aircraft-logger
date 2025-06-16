@@ -22,28 +22,23 @@ const logger = fs.createWriteStream('./public/passing-planes.log', {
   flags: 'a' // append data to the file
 });
 
-// const lowAltitudeLogger = fs.createWriteStream('./public/low-altitude-planes.log', {
-//   flags: 'a' // append data to the file
-// });
+const lowAltitudeLogger = fs.createWriteStream('./public/low-altitude-planes.log', {
+  flags: 'a' // append data to the file
+});
 
-function logPlanesNearby() {
+function monitorPlanesNearby() {
   // get and process plane data from dump1090
   fetch(URL)
     .then(processResponse)
     .catch(err => console.log(err.message));
 
-  // write data to log of planes that have left the local area
-  const now = Date.now(); // millis since epoch
-  const expiredPlanes = planes.values()
-    .toArray()
-    .filter(plane => now - plane.lastSeen >= CACHE_EVICTION_TIME);
-
+  const expiredPlanes = getExpiredPlanes();
   logPlanes(expiredPlanes);
 
-  // clean up of expired planes
+  // remove expired planes
   expiredPlanes.forEach(plane => planes.delete(plane.hex));
 }
-setInterval(logPlanesNearby, POLLING_INTERVAL);
+setInterval(monitorPlanesNearby, POLLING_INTERVAL);
 
 async function processResponse(response) {
   if (!response.ok) {
@@ -63,10 +58,26 @@ function updatePlanes(plane) {
   }
 }
 
+function getExpiredPlanes() {
+  const now = Date.now();
+  return planes.values()
+    .toArray()
+    .filter(plane => now - plane.lastSeen >= CACHE_EVICTION_TIME);
+}
+
 function logPlanes(planes) {
   planes.forEach(plane => {
     logger.write(`${plane}\n`);
+
+    if (plane.closestDistancePlane.altitude <= 1500) {
+      lowAltitudeLogger.write(`${serializePlanePath(plane)}\n`);
+    }
 });
+}
+
+function serializePlanePath(plane) {
+  // use semi-colons because the path array already uses commas
+  return `${format(plane.lastSeen)};${plane.hex};${plane.path}`;
 }
 
 function getDistance({lat, lon}) {
@@ -78,7 +89,7 @@ function getDistance({lat, lon}) {
             Math.sin(dLon / 2) * Math.sin(dLon / 2);
   
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in km
+  return R * c; // distance in km
 }
 
 function toRad(angle) {
