@@ -1,13 +1,20 @@
+name: local-aircraft-logger
+
 services:
-  web:
+  data:
     image: node:22-alpine
     env_file: .env
-    working_dir: 
-    ports:
-      - 8090:8090
+    working_dir: /app
+    command: node dump1090-logger.js
+    volumes:
+      - .:/app
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: example
-      POSTGRES_DB: exampledb
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: npx http-server -d false -p 3000
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+
