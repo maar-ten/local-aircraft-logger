@@ -19,7 +19,7 @@ const format = (epoch) => new Date(epoch).toLocaleString('sv', {timezone: TZ}).r
 
 const aircrafts = new Map();
 
-const logger = fs.createWriteStream('./public/passing-aircrafts.log', {
+const logger = fs.createWriteStream('./public/passed-aircrafts.log', {
   flags: 'a' // append data to the file
 });
 
