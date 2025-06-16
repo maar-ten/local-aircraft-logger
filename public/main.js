@@ -1,11 +1,11 @@
 import { LeafletMap } from './leaflet.js';
-import { plotPastPlanes } from './passed-planes.js';
-import { plotPastPlanePaths } from './passed-plane-paths.js';
-import { plotLivePlanes } from './live-planes.js';
+import { plotPastAircrafts } from './passed-aircrafts.js';
+import { plotPastAircraftPaths } from './passed-aircraft-paths.js';
+import { plotLiveAircrafts } from './live-aircraft.js';
 
-const PAST_PLANE_DATA_URL = 'passing-planes.log';
-const PAST_PLANE_PATH_DATA_URL = 'low-altitude-planes.log'
-const LIVE_PLANE_DATA_URL = `http://${location.hostname}:8080/data.json`;
+const PAST_AIRCRAFT_DATA_URL = 'passed-aircrafts.log';
+const PAST_AIRCRAFT_PATH_DATA_URL = 'low-altitude-aircrafts.log'
+const LIVE_AIRCRAFT_DATA_URL = `http://${location.hostname}:8080/data.json`;
 const POLLING_INTERVAL = 2 * 1000; // 2s
 
 const queryString = new URLSearchParams(window.location.search);
@@ -18,18 +18,18 @@ function logError(err) {
   console.log(`[${err.fileName}:${err.lineNumber}:${err.columnNumber}]`, err.message)
 }
 
-fetch(PAST_PLANE_DATA_URL)
-    .then(response => plotPastPlanes(response, map.map))
+fetch(PAST_AIRCRAFT_DATA_URL)
+    .then(response => plotPastAircrafts(response, map.map))
     .catch(logError);
 
-fetch(PAST_PLANE_PATH_DATA_URL)
-    .then(response => plotPastPlanePaths(response, map.map))
+fetch(PAST_AIRCRAFT_PATH_DATA_URL)
+    .then(response => plotPastAircraftPaths(response, map.map))
     .catch(logError);
 
-function fetchLivePlanes() {
-    fetch(LIVE_PLANE_DATA_URL)
-        .then(response => plotLivePlanes(response, map.map))
+function fetchLiveAircrafts() {
+    fetch(LIVE_AIRCRAFT_DATA_URL)
+        .then(response => plotLiveAircrafts(response, map.map))
         .catch(logError);
 }
 
-setInterval(fetchLivePlanes, POLLING_INTERVAL);
+setInterval(fetchLiveAircrafts, POLLING_INTERVAL);
