@@ -34,7 +34,7 @@ export function updatePath(path, plane) {
     const newCoords = [plane.lat, plane.lon];
 
     if (coords[coords.length - 1] !== newCoords) {
-      path.addLatLngs([plane.lat, plane.lon]);
+      path.addLatLng([plane.lat, plane.lon]);
     }
 }
 
