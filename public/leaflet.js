@@ -31,8 +31,11 @@ export function updateMarker(marker, plane) {
 
 export function updatePath(path, plane) {
     const coords = path.getLatLngs();
-    coords.push([plane.lat, plane.lon]);
-    path.setLatLngs(coords);
+    const newCoords = [plane.lat, plane.lon];
+
+    if (coords[coords.length - 1] !== newCoords) {
+      path.addLatLngs([plane.lat, plane.lon]);
+    }
 }
 
 function getIcon(altitude, track, live = false) {
