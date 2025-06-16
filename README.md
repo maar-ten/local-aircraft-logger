@@ -30,7 +30,7 @@ Go to http://localhost:3000/map.html
 This application can run on a Raspberry Pi 2 Model B from 2015 with a A 900MHz quad-core ARM Cortex-A7 CPU and 1GB RAM and a 12GB memory card without any problems.
 
 ## My take aways
-Decoding of the Automatic Dependent Surveillance-Broadcast messages of aircrafts is weird, but facinating and super efficient.
+The encoding of the automatic dependent surveillance-broadcast (ADS-B) messages of aircrafts is weird, but facinating and very efficient.
 
 Take the location for instance. They could just send their geo-coordinates (lat,lon), but that would take up all of the 112 bit message.
 Instead they sent grid locations of two separate grids (in 2 messages) where the plotted points only line up at one specific point if you would lay both grids on top of each other.
