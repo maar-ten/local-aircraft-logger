@@ -4,7 +4,7 @@ Install docker
 
 Run the data collection with a docker nodejs image
 
-`docker run -d --name data -p 8090:8090 --env-file=.env --rm -v "$PWD:/app" -w /app node:22-alpine node index.js`
+`docker run -d --name data -p 8090:8090 --env-file=.env --rm -v "$PWD:/app" -w /app node:22-alpine node dump1090-logger.js`
 
 Run the data reporting with a docker nodejs image
 

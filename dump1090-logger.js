@@ -15,7 +15,11 @@ const planes = new Map();
 
 const logger = fs.createWriteStream('./public/passing-planes.log', {
   flags: 'a' // append data to the file
-})
+});
+
+const lowAltitudeLogger = fs.createWriteStream('./public/low-altitude-planes.log', {
+  flags: 'a' // append data to the file
+});
 
 function logPlanesNearby() {
   // get and process plane data from dump1090
