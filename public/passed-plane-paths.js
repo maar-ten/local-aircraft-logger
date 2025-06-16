@@ -1,7 +1,5 @@
 import { addPathPoints } from './leaflet.js';
 
-const CUTOFF_TIME = 1 * 60 * 60 * 1000; // 1h 
-
 export async function plotPastPlanePaths(response, map) {
     if (!response.ok) {
         throw new Error(`Response not OK: ${response.status}`);
@@ -17,9 +15,7 @@ export async function plotPastPlanePaths(response, map) {
             time: arr[0],
             hex: arr[1],
             path: arr[2],
-            opacity: 1 - ((now - new Date(arr[3])) / CUTOFF_TIME)
         }))
-        .filter(({ time }) => now - new Date(time) < CUTOFF_TIME)
         .map(({path}) => parsePath(path))
         .forEach(points => addPathPoints(points, map));
 }

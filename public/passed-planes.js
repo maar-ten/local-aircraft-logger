@@ -24,9 +24,6 @@ export async function plotPastPlanes(response, map) {
             altitude: arr[7],
             track: arr[8],
             measurements: arr[9],
-            opacity: 1 - ((now - new Date(arr[3])) / CUTOFF_TIME)
         }))
-        .filter(({ time }) => now - new Date(time) < CUTOFF_TIME)
-        .filter(({ altitude }) => altitude <= CUTOFF_HEIGHT)
         .forEach(plane => addMarker(plane, map));
 }

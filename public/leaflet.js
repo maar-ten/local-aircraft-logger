@@ -14,7 +14,7 @@ export function addMarker(plane, map) {
     marker.on('mouseover', () => marker.setZIndexOffset(10000));
     marker.on('mouseout', () => marker.setZIndexOffset(0));
     marker.bindPopup(getPopupText(plane));
-    marker.setOpacity(plane.opacity);
+    marker.setOpacity(plane.opacity ?? 1);
     return marker;
 }
 
