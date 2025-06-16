@@ -1,7 +1,7 @@
 import { LeafletMap } from './leaflet.js';
 import { plotPastAircrafts } from './passed-aircrafts.js';
 import { plotPastAircraftPaths } from './passed-aircraft-paths.js';
-import { plotLiveAircrafts } from './live-aircraft.js';
+import { plotLiveAircrafts } from './live-aircrafts.js';
 
 const PAST_AIRCRAFT_DATA_URL = 'passed-aircrafts.log';
 const PAST_AIRCRAFT_PATH_DATA_URL = 'low-altitude-aircrafts.log'
