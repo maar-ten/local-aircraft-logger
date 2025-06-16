@@ -14,7 +14,7 @@ console.log('Timezone set to:', TZ);
 console.log(`Fetching data from: ${URL} every ${POLLING_INTERVAL / 1000} sec.`);
 
 // Locale of Sweden (sv) looks similar to ISO
-const format = (datetime) => datetime.toLocaleString('sv', {timezone: TZ}).replace(' ', 'T');
+const format = (epoch) => new Date(epoch).toLocaleString('sv', {timezone: TZ}).replace(' ', 'T');
 
 const planes = new Map();
 
