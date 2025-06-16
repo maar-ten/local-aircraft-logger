@@ -12,7 +12,7 @@ class Plane {
     }
 
     update(plane) {
-      plane.measurements = this.updates + 1;
+      plane.measurements = this.updates() + 1;
       updateMarker(this.marker, plane);
       updatePath(this.path, plane);
     }
