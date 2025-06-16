@@ -22,6 +22,10 @@ export function addPath(plane, map) {
     return L.polyline([[plane.lat, plane.lon]]).addTo(map);
 }
 
+export function addPathPoints(points, map) {
+    return L.polyline(points).addTo(map);
+}
+
 export function updateMarker(marker, plane) {
     marker.setIcon(getIcon(plane.altitude, plane.track, true));
     marker.setLatLng([plane.lat, plane.lon]);

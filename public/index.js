@@ -1,8 +1,10 @@
 import { LeafletMap } from './leaflet.js';
 import { plotPastPlanes } from './passed-planes.js';
+import { plotPastPlanePaths } from '.passed-plane-paths.js';
 import { plotLivePlanes } from './live-planes.js';
 
 const PAST_PLANE_DATA_URL = 'passing-planes.log';
+const PAST_PLANE_PATH_DATA_URL = 'low-altitude-planes.log'
 const LIVE_PLANE_DATA_URL = `http://${location.hostname}:8080/data.json`;
 const POLLING_INTERVAL = 2 * 1000; // 2s
 
@@ -18,6 +20,10 @@ function logError(err) {
 
 fetch(PAST_PLANE_DATA_URL)
     .then(response => plotPastPlanes(response, map.map))
+    .catch(logError);
+
+fetch(PAST_PLANE_PATH_DATA_URL)
+    .then(response => plotPastPlanePaths(response, map.map))
     .catch(logError);
 
 function fetchLivePlanes() {
