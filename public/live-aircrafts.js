@@ -1,5 +1,7 @@
 import { addMarker, addPath, updateMarker, updatePath } from './leaflet.js';
 
+const TZ = 'UTC'; //needs to be set in the URL
+
 class Aircraft {
     hex;
     marker;
