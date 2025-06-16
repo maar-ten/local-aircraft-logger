@@ -1,6 +1,7 @@
 import { addMarker } from './leaflet.js';
 
 const CUTOFF_TIME = 1 * 60 * 60 * 1000; // 1h 
+const CUTOFF_HEIGHT = 1500 // feet
 
 export async function plotPastPlanes(response, map) {
     if (!response.ok) {
@@ -26,5 +27,6 @@ export async function plotPastPlanes(response, map) {
             opacity: 1 - ((now - new Date(arr[3])) / CUTOFF_TIME)
         }))
         .filter(({ time }) => now - new Date(time) < CUTOFF_TIME)
+        .filter(({ altitude }) => altitude <= CUTOFF_HEIGHT)
         .forEach(plane => addMarker(plane, map));
 }
