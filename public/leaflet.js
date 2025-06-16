@@ -10,12 +10,13 @@ export class LeafletMap {
 }
 
 export function addMarker(aircraft, map) {
-    const marker = L.marker([aircraft.lat, aircraft.lon], { icon: getIcon(aircraft.altitude, aircraft.track) }).addTo(map);
-    marker.on('mouseover', () => marker.setZIndexOffset(10000));
-    marker.on('mouseout', () => marker.setZIndexOffset(0));
-    marker.bindPopup(getPopupText(aircraft));
-    marker.setOpacity(aircraft.opacity ?? 1);
-    return marker;
+    return L.marker([aircraft.lat, aircraft.lon])
+    .setIcon(getIcon(aircraft.altitude, aircraft.track))
+    .on('mouseover', () => marker.setZIndexOffset(10000))
+    .on('mouseout', () => marker.setZIndexOffset(0))
+    .bindPopup(getPopupText(aircraft))
+    .setOpacity(aircraft.opacity ?? 1)
+    .addTo(map);
 }
 
 export function addPath(aircraft, map) {
