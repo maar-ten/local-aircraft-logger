@@ -12,6 +12,7 @@ class Plane {
     }
 
     update(plane) {
+      plane.measurements = this.updates + 1;
       updateMarker(this.marker, plane);
       updatePath(this.path, plane);
     }
@@ -19,6 +20,10 @@ class Plane {
     remove() {
         this.marker.remove();
         this.path.remove();
+    }
+
+    updates() {
+        this.path.getLatLngs().length;
     }
 }
 
