@@ -16,7 +16,7 @@ export async function plotPastPlanePaths(response, map) {
         .map(arr => ({
             time: arr[0],
             hex: arr[1],
-            path: parsePath(arr[2]),
+            path: arr[2],
             opacity: 1 - ((now - new Date(arr[3])) / CUTOFF_TIME)
         }))
         .filter(({ time }) => now - new Date(time) < CUTOFF_TIME)
