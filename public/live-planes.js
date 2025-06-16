@@ -23,7 +23,7 @@ class Plane {
     }
 
     updates() {
-        this.path.getLatLngs().length;
+        return this.path.getLatLngs().length;
     }
 }
 
