@@ -2,8 +2,9 @@ const fs = require('fs')
 
 const URL = 'http://172.17.0.1:8080/data.json';
 // const URL = 'http://localhost:8080/data.json';
-const POLLING_INTERVAL = 5 * 1000; // 5s
+const POLLING_INTERVAL = 2 * 1000; // 2s
 const CACHE_EVICTION_TIME = 2 * 60 * 1000; // 2 minutes
+const LOW_ALTITUDE_CUTOFF = 1500 // in feet
 const LAT_HOME = Number(process.env.LAT_HOME) || 52;
 const LON_HOME = Number(process.env.LON_HOME) || 4;
 const TZ = process.env.TZ || 'UTC';
@@ -69,7 +70,7 @@ function logPlanes(planes) {
   planes.forEach(plane => {
     logger.write(`${plane}\n`);
 
-    if (plane.closestDistancePlane.altitude <= 1500) {
+    if (plane.closestDistancePlane.altitude <= LOW_ALTITUDE_CUTOFF) {
       lowAltitudeLogger.write(`${serializePlanePath(plane)}\n`);
     }
 });
