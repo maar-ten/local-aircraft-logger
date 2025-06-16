@@ -29,7 +29,7 @@ function parsePath(pathStr) {
   const path = [];
   const pathPoints = pathStr.split(',');
 
-  for(i = 0; i < pathPoints.length / 2; i += 2) {
+  for(let i = 0; i < pathPoints.length / 2; i += 2) {
     path.push([pathPoints[i], pathPoints[i + 1]]);
   }
 
