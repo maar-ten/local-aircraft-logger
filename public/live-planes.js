@@ -45,15 +45,14 @@ function plotPlanes(plane, map) {
     if (livePlaneMarkers.has(plane.hex)) {
         const cachedPlane = livePlaneMarkers.get(plane.hex);
         cachedPlane.path.push(plane);
-        updateMarker(cachedPlane);
+        updateMarker(cachedPlane.marker, plane);
         return;
     }
 
     livePlaneMarkers.set(plane.hex, new Plane(plane, addMarker(plane, map)));
 }
 
-function updateMarker(plane) {
-    const marker = plane.marker;
+function updateMarker(marker, plane) {
     marker.setIcon(getIcon(plane.altitude, plane.track, true));
     marker.setLatLng([plane.lat, plane.lon]);
     marker.setZIndexOffset(20000);
