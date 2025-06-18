@@ -26,7 +26,7 @@ export class LeafletMap {
     }
 
     addTo(layer, group) {
-        switch(layer) {
+        switch(group) {
             case LayerGroups.LIVE_AIRCRAFTS:
                 this.liveAircrafts.addLayer(layer);
                 return;
