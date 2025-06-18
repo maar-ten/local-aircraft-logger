@@ -110,7 +110,7 @@ function getIcon(altitude, track, live = false) {
 
 function getPopupText(aircraft) {
     return ''.concat(
-        `hex: <a href="https://map.opensky-network.org/?icao=${aircraft.hex}">${aircraft.hex}</a>`,
+        `hex: <a href="https://map.opensky-network.org/?icao=${aircraft.hex}" target="_blank">${aircraft.hex}</a>`,
         `<br>flight: ${aircraft.flight}`,
         `<br>time: ${aircraft.time}`,
         `<br>distance: ${aircraft.distance} km`,
