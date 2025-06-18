@@ -51,7 +51,7 @@ export class LeafletMap {
         return path;
     }
 
-    addPathPoints(points) {
+    addPathPoints(points, group) {
         const path = createPathPoints(points);
         this.addTo(path, group);
         return path;
