@@ -60,13 +60,16 @@ function createTileLayer() {
 }
 
 export function addMarker(aircraft, map) {
-    return L.marker([aircraft.lat, aircraft.lon])
-    .setIcon(getIcon(aircraft.altitude, aircraft.track))
-    .on('mouseover', () => marker.setZIndexOffset(10000))
-    .on('mouseout', () => marker.setZIndexOffset(0))
-    .bindPopup(getPopupText(aircraft))
-    .setOpacity(aircraft.opacity ?? 1)
-    .addTo(map);
+    const marker = L.marker([aircraft.lat, aircraft.lon])
+        .setIcon(getIcon(aircraft.altitude, aircraft.track))
+        .bindPopup(getPopupText(aircraft))
+        .setOpacity(aircraft.opacity ?? 1)
+        .addTo(map);
+
+    marker.on('mouseover', () => marker.setZIndexOffset(10000))
+          .on('mouseout', () => marker.setZIndexOffset(0));
+
+    return marker;
 }
 
 export function addPath(aircraft, map) {
