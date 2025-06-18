@@ -40,19 +40,19 @@ export class LeafletMap {
     }
 
     addMarker(aircraft, group) {
-        const marker = createMarker(aircraft, this.map);
+        const marker = createMarker(aircraft);
         this.addTo(marker, group);
         return marker;
     }
 
     addPath(aircraft, group) {
-        const path = createPath(aircraft, this.map);
+        const path = createPath(aircraft);
         this.addTo(path, group);
         return path;
     }
 
     addPathPoints(points) {
-        const path = createPathPoints(points, thip);
+        const path = createPathPoints(points);
         this.addTo(path, group);
         return path;
     }
