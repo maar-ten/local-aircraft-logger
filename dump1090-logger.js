@@ -71,7 +71,7 @@ function logAircrafts(aircrafts) {
   aircrafts.forEach(aircraft => {
     logger.write(`${aircraft}\n`);
 
-    if (aircraft.closestDistanceAircraft.altitude <= LOW_ALTITUDE_CUTOFF) {
+    if (aircraft.distanceAircraft.altitude <= LOW_ALTITUDE_CUTOFF) {
       lowAltitudeLogger.write(`${serializePath(aircraft)}\n`);
     }
 });
@@ -103,9 +103,9 @@ class Aircraft {
   aircraft;
   path = [];
   lastSeen;
-  closestDistanceAircraft;
-  closestDistance;
-  closestDistanceTime;
+  distanceAircraft;
+  distance;
+  distanceTime;
 
   constructor(aircraft) {
     const now = Date.now();
@@ -113,9 +113,9 @@ class Aircraft {
     this.hex = aircraft.hex;
     this.aircraft = aircraft;
     this.path.push([aircraft.lat, aircraft.lon]);
-    this.closestDistance = getDistance(aircraft);
-    this.closestDistanceTime = now;
-    this.closestDistanceAircraft = aircraft;
+    this.distance = getDistance(aircraft);
+    this.distanceTime = now;
+    this.distanceAircraft = aircraft;
     this.lastSeen = now;
   }
 
@@ -123,10 +123,10 @@ class Aircraft {
     const distance = getDistance(aircraft);
     const now = Date.now();
 
-    if (distance < this.closestDistance) {
-      this.closestDistance = distance;
-      this.closestDistanceTime = now;
-      this.closestDistanceAircraft = aircraft;
+    if (distance > this.distance) {
+      this.distance = distance;
+      this.distanceTime = now;
+      this.distanceAircraft = aircraft;
     }
 
     this.lastSeen = now;
@@ -146,14 +146,14 @@ class Aircraft {
     return [
       format(this.lastSeen),
       this.hex,
-      this.closestDistanceAircraft.flight.trim(),
-      format(this.closestDistanceTime),
-      this.closestDistanceAircraft.lat,
-      this.closestDistanceAircraft.lon,
-      this.closestDistance.toFixed(1),
-      this.closestDistanceAircraft.altitude,
-      this.closestDistanceAircraft.speed,
-      this.closestDistanceAircraft.track,
+      this.distanceAircraft.flight.trim(),
+      format(this.distanceTime),
+      this.distanceAircraft.lat,
+      this.distanceAircraft.lon,
+      this.distance.toFixed(1),
+      this.distanceAircraft.altitude,
+      this.distanceAircraft.speed,
+      this.distanceAircraft.track,
       this.path.length
     ].toString();
   }
