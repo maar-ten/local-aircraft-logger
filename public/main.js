@@ -19,16 +19,16 @@ function logError(err) {
 }
 
 fetch(PAST_AIRCRAFT_DATA_URL)
-    .then(response => plotPastAircrafts(response, map.map))
+    .then(response => plotPastAircrafts(response, map))
     .catch(logError);
 
 fetch(PAST_AIRCRAFT_PATH_DATA_URL)
-    .then(response => plotPastAircraftPaths(response, map.map))
+    .then(response => plotPastAircraftPaths(response, map))
     .catch(logError);
 
 function fetchLiveAircrafts() {
     fetch(LIVE_AIRCRAFT_DATA_URL)
-        .then(response => plotLiveAircrafts(response, map.map))
+        .then(response => plotLiveAircrafts(response, map))
         .catch(logError);
 }
 

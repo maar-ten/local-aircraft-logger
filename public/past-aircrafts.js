@@ -1,4 +1,4 @@
-import { addMarker } from './leaflet.js';
+import { LayerGroups } from './leaflet.js';
 
 const CUTOFF_TIME = 1 * 60 * 60 * 1000; // 1h 
 const CUTOFF_HEIGHT = 1500 // feet
@@ -25,5 +25,5 @@ export async function plotPastAircrafts(response, map) {
             track: arr[8],
             measurements: arr[9],
         }))
-        .forEach(aircraft => addMarker(aircraft, map));
+        .forEach(aircraft => map.addMarker(aircraft, LayerGroups.OTHER_PAST_AIRCRAFTS));
 }

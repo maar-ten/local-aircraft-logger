@@ -50,6 +50,12 @@ export class LeafletMap {
         this.addTo(path, group);
         return path;
     }
+
+    addPathPoints(points, group) {
+        const path = addPathPoints(points, this.map);
+        this.addTo(path, group);
+        return path;
+    }
 }
 
 function createTileLayer() {
