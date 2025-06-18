@@ -22,8 +22,9 @@ export async function plotPastAircrafts(response, map) {
             lon: arr[5],
             distance: arr[6],
             altitude: arr[7],
-            track: arr[8],
-            measurements: arr[9],
+            speed: arr[8],
+            track: arr[9],
+            measurements: arr[10],
         }))
         .forEach(aircraft => map.addMarker(aircraft, LayerGroups.OTHER_PAST_AIRCRAFTS));
 }
