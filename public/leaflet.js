@@ -1,12 +1,62 @@
+export const LayerGroups = {
+  LIVE_AIRCRAFTS: 'live',
+  LOW_FLYING_AIRCRAFTS: 'low',
+  OTHER_PAST_AIRCRAFTS: 'others'
+}
+
 export class LeafletMap {
     constructor(mapId, lat, lon) {
-        this.map = L.map(mapId).setView([lat, lon], 10);
+        this.liveAircrafts = L.layerGroup([]);
+        this.lowFlyingAircrafts = L.layerGroup([]);
+        this.otherPastAircrafts = L.layerGroup([]);
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(this.map);
+        const overlays = {
+            "Live": this.liveAircrafts,
+            "Past low flying aircrafts": this.lowFlyingAircrafts,
+            "Past aircrafts": this.otherPastAircrafts,
+        }
+
+        this.map = L.map(mapId, {
+            center: [lat, lon],
+            zoom: 10,
+            layers: [createTileLayer(), this.liveAircrafts]
+        });
+
+        L.control.layers(null, overlays).addTo(this.map);
     }
+
+    addTo(layer, group) {
+        switch(layer) {
+            case LayerGroups.LIVE_AIRCRAFTS:
+                this.liveAircrafts.addLayer(layer);
+                return;
+            case LayerGroups.LOW_FLYING_AIRCRAFTS:
+                this.lowFlyingAircrafts.addLayer(layer);
+                return;
+            case LayerGroups.OTHER_PAST_AIRCRAFTS:
+                this.otherPastAircrafts.addLayer(layer);
+                return;
+        }
+    }
+
+    addMarker(aircraft, group) {
+        const marker = addMarker(aircraft, this.map);
+        this.addTo(marker, group);
+        return marker;
+    }
+
+    addPath(aircraft, group) {
+        const path = addPath(aircraft, this.map);
+        this.addTo(path, group);
+        return path;
+    }
+}
+
+function createTileLayer() {
+    return L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
+    );
 }
 
 export function addMarker(aircraft, map) {

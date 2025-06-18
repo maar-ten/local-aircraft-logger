@@ -1,9 +1,9 @@
 import { LeafletMap } from './leaflet.js';
-import { plotPastAircrafts } from './passed-aircrafts.js';
-import { plotPastAircraftPaths } from './passed-aircraft-paths.js';
+import { plotPastAircrafts } from './past-aircrafts.js';
+import { plotPastAircraftPaths } from './past-aircraft-paths.js';
 import { plotLiveAircrafts } from './live-aircrafts.js';
 
-const PAST_AIRCRAFT_DATA_URL = 'passed-aircrafts.log';
+const PAST_AIRCRAFT_DATA_URL = 'past-aircrafts.log';
 const PAST_AIRCRAFT_PATH_DATA_URL = 'low-altitude-aircrafts.log'
 const LIVE_AIRCRAFT_DATA_URL = `http://${location.hostname}:8080/data.json`;
 const POLLING_INTERVAL = 2 * 1000; // 2s

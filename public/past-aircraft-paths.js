@@ -1,4 +1,4 @@
-import { addPathPoints } from './leaflet.js';
+import { LayerGroups } from './leaflet.js';
 
 export async function plotPastAircraftPaths(response, map) {
     if (!response.ok) {
@@ -17,7 +17,7 @@ export async function plotPastAircraftPaths(response, map) {
             path: arr[2],
         }))
         .map(({path}) => parsePath(path))
-        .forEach(points => addPathPoints(points, map));
+        .forEach(points => map.addPathPoints(points, LayerGroups.LOW_FLYING_AIRCRAFTS));
 }
 
 // combines every 1st and 2nd element into an array of arrays, so [1, 2, 3, 4] becomes [[1, 2], [3, 4]]

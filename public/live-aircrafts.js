@@ -1,4 +1,4 @@
-import { addMarker, addPath, updateMarker, updatePath } from './leaflet.js';
+import { LayerGroups, addMarker, addPath, updateMarker, updatePath } from './leaflet.js';
 
 const TZ = 'UTC'; //needs to be set in the URL
 
@@ -9,8 +9,8 @@ class Aircraft {
 
     constructor(aircraft, map) {
         this.hex = aircraft.hex;
-        this.marker = addMarker(aircraft, map);
-        this.path = addPath(aircraft, map);
+        this.marker = map.addMarker(aircraft, LayerGroups.LIVE_AIRCRAFTS);
+        this.path = map.addPath(aircraft, LayerGroups.LIVE_AIRCRAFTS);
     }
 
     update(aircraft) {
