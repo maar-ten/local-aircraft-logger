@@ -1,4 +1,4 @@
-import { LayerGroups, addMarker, addPath, updateMarker, updatePath } from './leaflet.js';
+import { LayerGroups, updateMarker, updatePath } from './leaflet.js';
 
 const TZ = 'UTC'; //needs to be set in the URL
 

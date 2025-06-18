@@ -40,19 +40,19 @@ export class LeafletMap {
     }
 
     addMarker(aircraft, group) {
-        const marker = addMarker(aircraft, this.map);
+        const marker = createMarker(aircraft, this.map);
         this.addTo(marker, group);
         return marker;
     }
 
     addPath(aircraft, group) {
-        const path = addPath(aircraft, this.map);
+        const path = createPath(aircraft, this.map);
         this.addTo(path, group);
         return path;
     }
 
-    addPathPoints(points, group) {
-        const path = addPathPoints(points, this.map);
+    addPathPoints(points) {
+        const path = createPathPoints(points, thip);
         this.addTo(path, group);
         return path;
     }
@@ -65,12 +65,11 @@ function createTileLayer() {
     );
 }
 
-export function addMarker(aircraft, map) {
+function createMarker(aircraft) {
     const marker = L.marker([aircraft.lat, aircraft.lon])
         .setIcon(getIcon(aircraft.altitude, aircraft.track))
         .bindPopup(getPopupText(aircraft))
-        .setOpacity(aircraft.opacity ?? 1)
-        .addTo(map);
+        .setOpacity(aircraft.opacity ?? 1);
 
     marker.on('mouseover', () => marker.setZIndexOffset(10000))
           .on('mouseout', () => marker.setZIndexOffset(0));
@@ -78,12 +77,12 @@ export function addMarker(aircraft, map) {
     return marker;
 }
 
-export function addPath(aircraft, map) {
-    return L.polyline([[aircraft.lat, aircraft.lon]]).addTo(map);
+function createPath(aircraft) {
+    return L.polyline([[aircraft.lat, aircraft.lon]]);
 }
 
-export function addPathPoints(points, map) {
-    return L.polyline(points).addTo(map);
+function createPathPoints(points) {
+    return L.polyline(points);
 }
 
 export function updateMarker(marker, aircraft) {
