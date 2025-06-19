@@ -2,12 +2,19 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/2.0.0-alpha/leaflet.min.css"
+          integrity="sha512-gR7O2N+omMZHTHew3GRgMqd2a53JFXPBpRto0ItoS8d+b6AVE8q+kvOktpsP6yyo3Ips2UK1lkEacu6OWS5k+g=="
           crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-          crossorigin=""></script>
+        <script type="importmap">
+            {
+                "imports": {
+                    "leaflet": "https://cdnjs.cloudflare.com/ajax/libs/leaflet/2.0.0-alpha/leaflet.min.js"
+                },
+                "integrity": {
+                    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/2.0.0-alpha/leaflet.min.js": "sha512-GnhB9//Nhyp/slp/q2LG1Luk8V0zYylOD/lPC6kNWv1bh1KDW0dVjeczQWqWSbex6WHSmDAoKVRznSpg8w6w6g=="
+                }
+            }
+        </script>
         <script type="module" src="main.js"></script>
 
         <style>

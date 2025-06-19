@@ -1,3 +1,5 @@
+import { Map, TileLayer, Marker, LayerGroup, Polyline, DivIcon, Control } from 'leaflet';
+
 export const LayerGroups = {
   LIVE_AIRCRAFTS: 'live',
   LOW_FLYING_AIRCRAFTS: 'low',
@@ -6,9 +8,9 @@ export const LayerGroups = {
 
 export class LeafletMap {
     constructor(mapId, lat, lon) {
-        this.liveAircrafts = L.layerGroup([]);
-        this.lowFlyingAircrafts = L.layerGroup([]);
-        this.otherPastAircrafts = L.layerGroup([]);
+        this.liveAircrafts = new LayerGroup([]);
+        this.lowFlyingAircrafts = new LayerGroup([]);
+        this.otherPastAircrafts = new LayerGroup([]);
 
         const overlays = {
             "Live": this.liveAircrafts,
@@ -16,13 +18,13 @@ export class LeafletMap {
             "Past aircrafts": this.otherPastAircrafts,
         }
 
-        this.map = L.map(mapId, {
+        this.map = new Map(mapId, {
             center: [lat, lon],
             zoom: 10,
             layers: [createTileLayer(), this.liveAircrafts]
         });
 
-        L.control.layers(null, overlays).addTo(this.map);
+        new Control.Layers(null, overlays).addTo(this.map);
     }
 
     addTo(layer, group) {
@@ -59,14 +61,14 @@ export class LeafletMap {
 }
 
 function createTileLayer() {
-    return L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    return new TileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
     );
 }
 
 function createMarker(aircraft) {
-    const marker = L.marker([aircraft.lat, aircraft.lon])
+    const marker = new Marker([aircraft.lat, aircraft.lon])
         .setIcon(getIcon(aircraft.altitude, aircraft.track))
         .bindPopup(getPopupText(aircraft))
         .setOpacity(aircraft.opacity ?? 1);
@@ -78,11 +80,11 @@ function createMarker(aircraft) {
 }
 
 function createPath(aircraft) {
-    return L.polyline([[aircraft.lat, aircraft.lon]]);
+    return new Polyline([[aircraft.lat, aircraft.lon]]);
 }
 
 function createPathPoints(points) {
-    return L.polyline(points);
+    return new Polyline(points);
 }
 
 export function updateMarker(marker, aircraft) {
@@ -105,7 +107,7 @@ function getIcon(altitude, track, live = false) {
     const rotation = -45 + Number(track); // -45 to correct the aircraft emoji's default rotation on most systems
     const iconClass = live ? 'aircraft-icon-live' : 'aircraft-icon';
     const html = `<div class="${iconClass}" style="transform: rotate(${rotation}deg); background-color: ${getAltitudeColor(altitude)};">✈️</div>`;
-    return L.divIcon({ html, className: '', iconSize: [30, 30] });
+    return new DivIcon({ html, className: '', iconSize: [30, 30] });
 }
 
 function getPopupText(aircraft) {
